@@ -19,7 +19,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by asus on 2015/6/19.
  */
-public class AudioPlayService extends Service implements MediaPlayer.OnCompletionListener,MediaPlayer.OnBufferingUpdateListener {
+public class AudioPlayService extends Service implements MediaPlayer.OnCompletionListener {
 
     private MediaPlayer mMediaPlayer;
     private String audioRootPath;
@@ -33,9 +33,6 @@ public class AudioPlayService extends Service implements MediaPlayer.OnCompletio
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        /*audioRootPath = intent.getStringExtra(AUDIO_PATH);
-        Log.v("TAG AUDIO_PATH",audioRootPath == null ? "null":audioRootPath);
-        Log.v("TAG PlayService","Service is started explicitly!!!");*/
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -54,13 +51,9 @@ public class AudioPlayService extends Service implements MediaPlayer.OnCompletio
 
         audioPath = audioRootPath + "/" + fileNamePrefix + ".mp3";
         Global.CURRENT_PLAY_FILENAME = audioPath;
-
         Log.v("TAG AUDIO_PATH",audioPath == null ? "null":audioPath);
-
         Log.v("TAG PlayService","Service is bound successfully!");
-
         mMediaPlayer = MediaPlayer.create(this, Uri.parse(audioPath));
-
         return aServiceBinder;
     }
 
@@ -105,14 +98,6 @@ public class AudioPlayService extends Service implements MediaPlayer.OnCompletio
         }
     }
 
-    @Override
-    public void onBufferingUpdate(MediaPlayer mediaPlayer, int i) {
-
-        Log.v("TAG","onBufferingUpdate is invoked!");
-        Intent intent = new Intent(this,ListeningActivity.class);
-        intent.putExtra("PLAYING_TIME",i * mediaPlayer.getDuration());
-        this.sendBroadcast(intent);
-    }
 
     //service提供给activity调用的接口
     class AudioServiceBinder extends Binder implements ListeningActivity.AudioPlayServiceInterface{
