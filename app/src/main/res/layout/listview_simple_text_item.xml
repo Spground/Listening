@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:background="#EFEFEF"
+    android:orientation="horizontal"
+    android:gravity="center"
+
+    >
+<TextView
+    android:id="@+id/id_listview_simple_text_item_textView"
+    android:layout_width="wrap_content"
+    android:layout_height="60dp"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:text="ss"
+    android:textColor="@color/text_color_black"
+    android:textSize="@dimen/text_size_main_body"
+    android:gravity="left|center"
+    android:layout_weight="1.0"
+    android:layout_marginLeft="20dp"
+
+    />
+    <ImageButton
+
+        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:src="@drawable/btn_listening"
+        android:scaleType="center"
+        android:layout_marginRight="10dp"
+        android:id="@+id/id_choose_activity_download_imagebutton"
+        />
+</LinearLayout>

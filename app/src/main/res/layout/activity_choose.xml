@@ -1,0 +1,74 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/id_choose_activity_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cn.edu.dlut.listening.activity.ChooseActivity">
+    <android.support.v7.widget.Toolbar
+
+        android:id="@+id/id_choose_activity_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+
+        >
+        <TextView
+            android:id="@+id/id_choose_activity_title_textview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/app_name"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_title"
+            android:textColor="@color/text_color_white"
+            android:textStyle="italic|bold"
+            />
+    </android.support.v7.widget.Toolbar>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/id_choose_activity_top_textview"
+        android:text="这是一些说明性文字......"
+        android:textColor="@color/text_color_black"
+        android:textSize="@dimen/text_size_main_body"
+        android:gravity="center"
+        android:layout_below="@id/id_choose_activity_toolbar"
+        android:layout_marginTop="10dp"
+
+        />
+    <View
+        android:layout_below="@id/id_choose_activity_top_textview"
+        android:id="@+id/id_topLine"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/text_color_black"
+        android:layout_marginTop="20dp"
+        />
+<ListView
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/id_choose_activity_listview"
+    android:layout_below="@id/id_topLine"
+    android:divider="@color/text_color_black"
+    android:dividerHeight="1px"
+
+
+
+       >
+    </ListView>
+    <View
+        android:layout_below="@id/id_choose_activity_listview"
+        android:id="@+id/id_bottomLine"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/text_color_black"
+
+        />
+
+</RelativeLayout>

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Listening</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_choose">选择试卷</string>
+    <string name="title_activity_listening">ListeningActivity</string>
+</resources>

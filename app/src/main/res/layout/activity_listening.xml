@@ -1,0 +1,117 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cn.edu.dlut.listening.activity.ListeningActivity">
+    <android.support.v7.widget.Toolbar
+
+        android:id="@+id/id_listening_activity_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+
+        >
+        <TextView
+            android:id="@+id/id_listening_activity_title_textview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/app_name"
+            android:gravity="center"
+            android:textSize="@dimen/text_size_title"
+            android:textColor="@color/text_color_white"
+            android:textStyle="italic|bold"
+            />
+    </android.support.v7.widget.Toolbar>
+    <RelativeLayout
+        android:id="@+id/id_listening_activity_paly_status_view"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center_horizontal"
+        android:layout_below="@id/id_listening_activity_toolbar"
+        android:background="@android:color/transparent"
+        android:paddingTop="5dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        >
+        <SeekBar
+            android:id="@+id/id_listening_activity_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress="0"
+            android:max="1000"
+            />
+        <TextView
+            android:id="@+id/id_listening_activity_playing_time_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/id_listening_activity_seekbar"
+            android:layout_alignParentLeft="true"
+            android:text="00:00"
+            android:textSize="8dp"
+            android:layout_marginLeft="8dp"
+
+            />
+        <TextView
+            android:id="@+id/id_listening_activity_end_time_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/id_listening_activity_seekbar"
+            android:layout_alignParentRight="true"
+            android:text="03:20"
+            android:textSize="8dp"
+            android:layout_marginRight="8dp"
+            />
+        <Button
+            android:id="@+id/id_listening_activity_btn_play"
+            android:layout_below="@id/id_listening_activity_end_time_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="播放"
+            android:textSize="6sp"
+            android:layout_centerInParent="true"
+            />
+        </RelativeLayout>
+
+        <!--下面是recycleview-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/id_listening_activity_recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:layout_below="@id/id_listening_activity_paly_status_view"
+            />
+
+
+<RelativeLayout
+    android:id="@+id/id_listening_activity_controlview"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_alignParentBottom="true"
+    android:padding="5dp"
+    android:background="@color/style_color_primary"
+    >
+    <Button
+        android:id="@+id/id_listening_activity_btn_pre"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="上一题"
+
+        />
+    <Button
+        android:id="@+id/id_listening_activity_btn_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="交卷"
+        android:layout_centerInParent="true"
+        />
+    <Button
+        android:id="@+id/id_listening_activity_btn_next"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="下一题"
+        android:layout_alignParentRight="true"
+        />
+    </RelativeLayout>
+
+</RelativeLayout>
