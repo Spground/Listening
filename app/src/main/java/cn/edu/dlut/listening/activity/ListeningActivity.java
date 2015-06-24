@@ -6,11 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
@@ -45,7 +43,6 @@ public class ListeningActivity extends ActionBarActivity implements View.OnClick
     private SeekBar seekBar;
     private TextView palyingtimeTV,endtimeTV;
     private MyReiver receiver;
-    private SeekBarUpdateTask seekBarUpdateTask;
 
     private RecyclerView recyclerView;
     private  RecyclerViewAdapter recyclerViewAdapter;
@@ -147,7 +144,7 @@ public class ListeningActivity extends ActionBarActivity implements View.OnClick
                         @Override
                         public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                             Log.v("TAG ","onProgressChanged is invoked "+i);
-                            updatePlayProgress(audioDuration * i / seekBar.getMax());
+                            updatePlayTimeProgress(audioDuration * i / seekBar.getMax());
                         }
 
                         @Override
@@ -162,8 +159,6 @@ public class ListeningActivity extends ActionBarActivity implements View.OnClick
                         }
                     });
 
-//                    seekBarUpdateTask = new SeekBarUpdateTask();
-//                    seekBarUpdateTask.execute();//开启监听任务
                 }
             }
 
@@ -175,30 +170,29 @@ public class ListeningActivity extends ActionBarActivity implements View.OnClick
         this.bindService(intent,con, Context.BIND_AUTO_CREATE);
     }
 
+    /*入下一次刷新的消息的队列*/
     private void queueNextRefresh(long delay) {
             Message msg = mHandler.obtainMessage(REFRESH);
             mHandler.removeMessages(REFRESH);
             mHandler.sendMessageDelayed(msg, delay);
 
     }
-
+/*刷新显示当前的播放时间*/
     private long refreshNow(){
         if(mPlayControler == null)
             return 500;
         else{
             long pos = mPlayControler.getCurrentPosition();
             long remaining = 1000 - pos % 1000;
-            updatePlayProgress(pos);
+            updatePlayTimeProgress(pos);
             seekBar.setProgress((int)(pos * seekBar.getMax()/ audioDuration));
             return remaining;
         }
     }
-    /*更新播放进度视图*/
-    private void updatePlayProgress(long msec){
-
+    /*更新播放进度的时间视图*/
+    private void updatePlayTimeProgress(long msec){
         Log.v("TAG","seekBar progress is :" + msec * seekBar.getMax()/ audioDuration);
         String str = getTimeStringByMsec(msec);
-        Log.v("TAG","updatePlayProgress:" + str);
         palyingtimeTV.setText(str);
     }
 
@@ -239,10 +233,7 @@ public class ListeningActivity extends ActionBarActivity implements View.OnClick
 
     @Override
     public void onClick(View view) {
-
         Log.v("TAG", "btn pressed!");
-        Log.v("TAG", (view.getId() == R.id.id_listening_activity_btn_play)+"");
-
         if(view.getId() == R.id.id_listening_activity_btn_play){
             Button btn = (Button)view;
             if(btn != null && btn.getText().equals("播放")){
@@ -252,16 +243,13 @@ public class ListeningActivity extends ActionBarActivity implements View.OnClick
                 //开始刷新时间
                 long next = refreshNow();
                 queueNextRefresh(next);
-
                 EventBus.getDefault().post(new PlayEvent(fileNamePrefix));
             }
             else if(btn != null && btn.getText().equals("暂停")){
                 //暂停播放
                 Log.v("TAG", "btn pause pressed!");
                 EventBus.getDefault().post(new PauseEvent(fileNamePrefix));
-
                 mHandler.removeMessages(REFRESH);
-
                 btn.setText("播放");
             }
             else if(btn == null)
@@ -275,48 +263,16 @@ public class ListeningActivity extends ActionBarActivity implements View.OnClick
 
     @Override
     protected void onDestroy() {
-        if(seekBarUpdateTask != null &&!seekBarUpdateTask.isCancelled()){
-            seekBarUpdateTask.cancel(true);
-        }
         super.onDestroy();
     }
 
-    //异步更新seekbar的进度条
-    class SeekBarUpdateTask extends AsyncTask<Void,Long,Void>{
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            long pos = 0;
-            long remaining = 1;
-            while((pos = mPlayControler.getCurrentPosition() )< mPlayControler.getAudioDuration()){
-                try {
-
-                    Thread.currentThread().sleep(remaining);
-                    publishProgress(pos);
-                    remaining = 1000 - (pos % 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Long... values) {
-            if(!(mPlayControler.getCurrentPosition() < seekBar.getProgress() * audioDuration/ seekBar.getMax())){
-                updatePlayProgress(values[0]);
-                seekBar.setProgress((int)(values[0] * seekBar.getMax()/ audioDuration));
-            }
-            super.onProgressUpdate(values);
-        }
-    }
     //广播接受者
     class MyReiver extends BroadcastReceiver{
 
         @Override
         public void onReceive(Context context, Intent intent) {
             int msec = intent.getIntExtra("PLAYING_TIME",0);
-            updatePlayProgress(msec);//更新进度
+            updatePlayTimeProgress(msec);//更新进度
         }
     }
 }

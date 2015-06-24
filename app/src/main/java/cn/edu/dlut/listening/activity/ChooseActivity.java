@@ -30,34 +30,26 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
 import cn.edu.dlut.listening.R;
-import cn.edu.dlut.listening.event.ResumeEvent;
 import cn.edu.dlut.listening.global.Global;
 import cn.edu.dlut.listening.network.CheckNetworkState;
-import cn.edu.dlut.listening.service.AudioPlayService;
-import de.greenrobot.event.EventBus;
 
 /*一个imageButon对应一个tag 即文件的名字（不含格式后缀）*/
-public class ChooseActivity extends ActionBarActivity {
+public class ChooseActivity extends ActionBarActivity implements  View.OnClickListener{
 
     TextView titleTextView ;
-    final String INTENT_TAG="CET_CLASS";
     String title;
     String[] titles = new String[]{"2014年6月听力试卷","2014年12月听力试卷","2015年6月听力试卷","2015年12月听力试卷"};
     String[] fileNamePrefix = new String[]{"201406cet4","201412cet4","201506cet4","201512cet4"};
-    String URLDir = "http://192.168.0.105/listening/cet4";
+    String URLDir = Global.URLDIR;//服务的上的目录
     ListView mListView;
     ListViewAdapter mListViewAdapter;
 
-    Global.PLAY_SATTE currentPlaySate = Global.PLAY_SATTE.STOP;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose);
-
-        //startPlayService();
-
         initView();
-        title = getIntent().getStringExtra(INTENT_TAG);
+        title = getIntent().getStringExtra("CET_CLASS");
         if(title != null){
             titleTextView.setText(title);
         }
@@ -73,7 +65,6 @@ public class ChooseActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 ChooseActivity.this.onBackPressed();
-                stopPlayService();
 
             }
         });
@@ -107,20 +98,17 @@ public class ChooseActivity extends ActionBarActivity {
 
     }
 
-    /*开启一个服务*/
-    private boolean startPlayService(){
-        String audioRootPath = Global.USER_DIR;
-        Intent intent = new Intent(ChooseActivity.this, AudioPlayService.class);
-        intent.putExtra("AUDIO_PATH",audioRootPath);
-        startService(intent);
-        return true;
-    }
-/*停止一个和服务*/
-    private void stopPlayService(){
-        stopService(new Intent(ChooseActivity.this,AudioPlayService.class));
+    @Override
+    public void onClick(View view) {
+        String fileNamePrefix = view.getTag().toString();
+        Intent intent = new Intent(ChooseActivity.this,ListeningActivity.class);
+        intent.putExtra("PLAY_FILE_NAME_PREFIX",fileNamePrefix);
+        intent.putExtra("CET_CLASS",title);
+        startActivity(intent);
     }
 
-/*下面是适配器*/
+
+    /*下面是适配器*/
     class ListViewAdapter extends BaseAdapter{
 
         @Override
@@ -158,8 +146,7 @@ public class ChooseActivity extends ActionBarActivity {
                 Log.v("TAG validFileName",fileNamePrefix[i]);
                 holder.imageButton.setBackgroundResource(R.drawable.btn_go_to_listening_defalut);
                 holder.imageButton.setImageResource(R.drawable.btn_listening);
-//                holder.imageButton.setClickable(true);
-                holder.imageButton.setOnClickListener(new PlayListener());
+                holder.imageButton.setOnClickListener(ChooseActivity.this);
             }
             else{
                 holder.imageButton.setImageResource(R.drawable.ic_action_download);
@@ -177,34 +164,6 @@ public class ChooseActivity extends ActionBarActivity {
         public ImageButton imageButton;
     }
 
-/*下面是播放监听器*/
-
-    class PlayListener implements View.OnClickListener{
-
-        @Override
-        public void onClick(View view) {
-            String fileNamePrefix = view.getTag().toString();
-            /*if(! Global.CURRENT_PLAY_FILENAME.equals(Global.USER_DIR + "/" + fileNamePrefix + ".mp3")){
-                EventBus.getDefault().post(new PlayEvent(fileNamePrefix));
-                currentPlaySate = Global.PLAY_SATTE.PLAYING;
-                return;
-            }
-            else if(currentPlaySate == Global.PLAY_SATTE.PLAYING){
-                EventBus.getDefault().post(new PauseEvent(fileNamePrefix));
-                currentPlaySate = Global.PLAY_SATTE.PAUSE;
-                Log.v("TAG PAUSE","PAUSE BTN PRESSED");
-                return;
-            }
-            if(currentPlaySate == Global.PLAY_SATTE.PAUSE){
-                EventBus.getDefault().post(new ResumeEvent(fileNamePrefix));
-                currentPlaySate = Global.PLAY_SATTE.PLAYING;
-            }*/
-            Intent intent = new Intent(ChooseActivity.this,ListeningActivity.class);
-            intent.putExtra(INTENT_TAG,title);
-            intent.putExtra("PLAY_FILE_NAME_PREFIX",fileNamePrefix);
-            startActivity(intent);
-        }
-    }
     /*下面是监听下载按钮的类*/
     class DownLoadListener implements View.OnClickListener{
         @Override
@@ -371,10 +330,8 @@ public class ChooseActivity extends ActionBarActivity {
 
         String jsonURL;
 
-
         @Override
         protected Boolean doInBackground(String... strings) {
-
             jsonURL = strings[0];
 
             mClient = new OkHttpClient();

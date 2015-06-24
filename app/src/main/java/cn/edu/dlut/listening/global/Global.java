@@ -14,7 +14,7 @@ public class Global extends Application {
    public static String  USER_DIR;
    public static String UNIQUE_NAME="cn.edu.dlut.listening/files";
    public static String CURRENT_PLAY_FILENAME = "";
-
+   public static final  String URLDIR = "http://192.168.0.105/listening/cet4";
    public static enum PLAY_SATTE{
        PLAYING,
        STOP,
